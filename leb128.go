@@ -7,6 +7,7 @@ package leb128
 
 import (
 	"bytes"
+	"io"
 )
 
 // These consts are here in their entirity even though MinInt32 is all that is used in this package
@@ -51,6 +52,23 @@ func DecodeULeb128(value []byte) uint32 {
 	return result
 }
 
+// Reads and decodes an unsigned LEB128 value from a ByteReader to an unsigned int32 value. Returns the result as a uint32
+func ReadULeb128(reader io.ByteReader) uint32 {
+	var result uint32 = 0
+	var ctr uint = 0
+	var cur byte = 0x80
+	var err error
+	for (cur&0x80 == 0x80) && ctr < 5 {
+		cur, err = reader.ReadByte()
+		if err != nil {
+			panic(err)
+		}
+		result += uint32((cur & 0x7f)) << (ctr * 7)
+		ctr++
+	}
+	return result
+}
+
 // Encode a signed int32 value to a signed LEB128 value. Returns the result in a byte slice
 func EncodeSLeb128(value int32) []byte {
 	var buf = new(bytes.Buffer)
@@ -85,6 +103,28 @@ func DecodeSLeb128(value []byte) int32 {
 	var signBits int32 = -1
 	for (cur&0x80 == 0x80) && ctr < 5 {
 		cur = value[ctr] & 0xff
+		result += int32((cur & 0x7f)) << (ctr * 7)
+		signBits <<= 7
+		ctr++
+	}
+	if ((signBits >> 1) & result) != 0 {
+		result += signBits
+	}
+	return result
+}
+
+// Reads and decodes a signed LEB128 value from a ByteReader to a signed int32 value. Returns the result as a int32
+func ReadSLeb128(reader io.ByteReader) int32 {
+	var result int32 = 0
+	var ctr uint = 0
+	var cur byte = 0x80
+	var signBits int32 = -1
+	var err error
+	for (cur&0x80 == 0x80) && ctr < 5 {
+		cur, err = reader.ReadByte()
+		if err != nil {
+			panic(err)
+		}
 		result += int32((cur & 0x7f)) << (ctr * 7)
 		signBits <<= 7
 		ctr++
