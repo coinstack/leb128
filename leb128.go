@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// The leb128 package provides methods to read and write LEB128 (Little-Endian Base 128) quantities.
+// Package leb128 provides methods to read and write LEB128 (Little-Endian Base 128) quantities.
 package leb128
 
 import (
@@ -26,7 +26,7 @@ const (
 	MaxUint64 = 1<<64 - 1
 )
 
-// Encode an unsigned int32 value to an unsigned LEB128 value. Returns the result in a byte slice
+// EncodeULeb128 encode's an unsigned int32 value to an unsigned LEB128 value. Returns the result in a byte slice
 func EncodeULeb128(value uint32) []byte {
 	remaining := value >> 7
 	var buf = new(bytes.Buffer)
@@ -39,10 +39,10 @@ func EncodeULeb128(value uint32) []byte {
 	return buf.Bytes()
 }
 
-// Decodes an unsigned LEB128 value to an unsigned int32 value. Returns the result as a uint32
+// DecodeULeb128 decodes an unsigned LEB128 value to an unsigned int32 value. Returns the result as a uint32
 func DecodeULeb128(value []byte) uint32 {
-	var result uint32 = 0
-	var ctr uint = 0
+	var result uint32
+	var ctr uint
 	var cur byte = 0x80
 	for (cur&0x80 == 0x80) && ctr < 5 {
 		cur = value[ctr] & 0xff
@@ -52,10 +52,10 @@ func DecodeULeb128(value []byte) uint32 {
 	return result
 }
 
-// Reads and decodes an unsigned LEB128 value from a ByteReader to an unsigned int32 value. Returns the result as a uint32
+// ReadULeb128 reads and decodes an unsigned LEB128 value from a ByteReader to an unsigned int32 value. Returns the result as a uint32
 func ReadULeb128(reader io.ByteReader) uint32 {
-	var result uint32 = 0
-	var ctr uint = 0
+	var result uint32
+	var ctr uint
 	var cur byte = 0x80
 	var err error
 	for (cur&0x80 == 0x80) && ctr < 5 {
@@ -69,7 +69,7 @@ func ReadULeb128(reader io.ByteReader) uint32 {
 	return result
 }
 
-// Encode a signed int32 value to a signed LEB128 value. Returns the result in a byte slice
+// EncodeSLeb128 encode a signed int32 value to a signed LEB128 value. Returns the result in a byte slice
 func EncodeSLeb128(value int32) []byte {
 	var buf = new(bytes.Buffer)
 	remaining := value >> 7
@@ -95,10 +95,10 @@ func EncodeSLeb128(value int32) []byte {
 	return buf.Bytes()
 }
 
-// Decodes a signed LEB128 value to a signed int32 value. Returns the result as a int32
+// DecodeSLeb128 decodes a signed LEB128 value to a signed int32 value. Returns the result as a int32
 func DecodeSLeb128(value []byte) int32 {
-	var result int32 = 0
-	var ctr uint = 0
+	var result int32
+	var ctr uint
 	var cur byte = 0x80
 	var signBits int32 = -1
 	for (cur&0x80 == 0x80) && ctr < 5 {
@@ -113,10 +113,10 @@ func DecodeSLeb128(value []byte) int32 {
 	return result
 }
 
-// Reads and decodes a signed LEB128 value from a ByteReader to a signed int32 value. Returns the result as a int32
+// ReadSLeb128 reads and decodes a signed LEB128 value from a ByteReader to a signed int32 value. Returns the result as a int32
 func ReadSLeb128(reader io.ByteReader) int32 {
-	var result int32 = 0
-	var ctr uint = 0
+	var result int32
+	var ctr uint
 	var cur byte = 0x80
 	var signBits int32 = -1
 	var err error
