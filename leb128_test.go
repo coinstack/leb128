@@ -6,7 +6,7 @@ package leb128
 
 import (
 	"bytes"
-	// "encoding/hex"
+	"encoding/hex"
 	"testing"
 )
 
@@ -72,6 +72,62 @@ func TestEncodeDecode(t *testing.T) {
 	if eof == nil {
 		t.Error("unexpected EOF not detected")
 	}
+
+	tempBytes, _ := hex.DecodeString("011b753d68747470733a2f2f6370722e736d2f63463557584459643642")
+	tempBuffer = bytes.NewBuffer(tempBytes)
+	tempBufferAfter, err := ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
+
+	tempBufferAfter, err = ReadULeb128(tempBuffer)
+	if err != nil {
+		t.Error("failed to read num")
+	}
+	t.Log(tempBufferAfter)
 }
 
 func TestDecodeULeb128(t *testing.T) {
